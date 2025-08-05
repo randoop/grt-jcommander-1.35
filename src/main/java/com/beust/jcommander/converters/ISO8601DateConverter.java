@@ -18,6 +18,8 @@
 
 package com.beust.jcommander.converters;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import com.beust.jcommander.ParameterException;
 
 import java.text.ParseException;
@@ -34,10 +36,13 @@ public class ISO8601DateConverter extends BaseConverter<Date> {
 
   private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
+  @SideEffectFree
+  @Impure
   public ISO8601DateConverter(String optionName) {
     super(optionName);
   }
 
+  @Impure
   public Date convert(String value) {
     try {
       return DATE_FORMAT.parse(value);

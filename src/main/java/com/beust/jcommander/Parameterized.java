@@ -1,5 +1,7 @@
 package com.beust.jcommander;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import com.beust.jcommander.internal.Lists;
 
 import java.lang.annotation.Annotation;
@@ -24,6 +26,7 @@ public class Parameterized {
   private WrappedParameter m_wrappedParameter;
   private ParametersDelegate m_parametersDelegate;
 
+  @Impure
   public Parameterized(WrappedParameter wp, ParametersDelegate pd,
       Field field, Method method) {
     m_wrappedParameter = wp;
@@ -35,6 +38,7 @@ public class Parameterized {
     m_parametersDelegate = pd;
   }
 
+  @Impure
   public static List<Parameterized> parseArg(Object arg) {
     List<Parameterized> result = Lists.newArrayList();
 
@@ -82,10 +86,12 @@ public class Parameterized {
     return result;
   }
 
+  @Pure
   public WrappedParameter getWrappedParameter() {
     return m_wrappedParameter;
   }
 
+  @Impure
   public Class<?> getType() {
     if (m_method != null) {
       return m_method.getParameterTypes()[0];
@@ -94,6 +100,7 @@ public class Parameterized {
     }
   }
 
+  @Impure
   public String getName() {
     if (m_method != null) {
       return m_method.getName();
@@ -102,6 +109,7 @@ public class Parameterized {
     }
   }
 
+  @Impure
   public Object get(Object object) {
     try {
       if (m_method != null) {
@@ -142,6 +150,7 @@ public class Parameterized {
     }
   }
 
+  @Pure
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -151,6 +160,7 @@ public class Parameterized {
     return result;
   }
 
+  @Pure
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
@@ -173,6 +183,7 @@ public class Parameterized {
     return true;
   }
 
+  @Impure
   public boolean isDynamicParameter(Field field) {
     if (m_method != null) {
       return m_method.getAnnotation(DynamicParameter.class) != null;
@@ -181,6 +192,7 @@ public class Parameterized {
     }
   }
 
+  @Impure
   public void set(Object object, Object value) {
     try {
       if (m_method != null) {
@@ -202,10 +214,12 @@ public class Parameterized {
     }
   }
 
+  @Pure
   public ParametersDelegate getDelegateAnnotation() {
     return m_parametersDelegate;
   }
 
+  @Impure
   public Type getGenericType() {
     if (m_method != null) {
       return m_method.getGenericParameterTypes()[0];
@@ -214,6 +228,8 @@ public class Parameterized {
     }
   }
 
+  @Pure
+  @Impure
   public Parameter getParameter() {
     return m_wrappedParameter.getParameter();
   }
@@ -221,6 +237,7 @@ public class Parameterized {
   /**
    * @return the generic type of the collection for this field, or null if not applicable.
    */
+  @Impure
   public Type findFieldGenericType() {
     if (m_method != null) {
       return null;
@@ -237,6 +254,8 @@ public class Parameterized {
     return null;
   }
 
+  @Pure
+  @Impure
   public boolean isDynamicParameter() {
     return m_wrappedParameter.getDynamicParameter() != null;
   }

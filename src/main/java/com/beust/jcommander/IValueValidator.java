@@ -1,4 +1,5 @@
 package com.beust.jcommander;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 public interface IValueValidator<T> {
   /**
@@ -9,6 +10,7 @@ public interface IValueValidator<T> {
    *
    * @throws ParameterException Thrown if the value of the parameter is invalid.
    */
+  @SideEffectFree
   void validate(String name, T value) throws ParameterException;
 
 }

@@ -18,6 +18,8 @@
 
 package com.beust.jcommander.converters;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import com.beust.jcommander.ParameterException;
 
 import java.math.BigDecimal;
@@ -29,10 +31,13 @@ import java.math.BigDecimal;
  */
 public class BigDecimalConverter extends BaseConverter<BigDecimal> {
 
+  @SideEffectFree
+  @Impure
   public BigDecimalConverter(String optionName) {
     super(optionName);
   }
 
+  @Impure
   public BigDecimal convert(String value) {
     try {
       return new BigDecimal(value);

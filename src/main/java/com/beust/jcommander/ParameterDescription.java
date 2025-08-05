@@ -18,6 +18,8 @@
 
 package com.beust.jcommander;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import com.beust.jcommander.validators.NoValidator;
 import com.beust.jcommander.validators.NoValueValidator;
 
@@ -52,6 +54,7 @@ public class ParameterDescription {
   /** Longest of the names(), used to present usage() alphabetically */
   private String m_longestName = "";
 
+  @Impure
   public ParameterDescription(Object object, DynamicParameter annotation,
       Parameterized parameterized,
       ResourceBundle bundle, JCommander jc) {
@@ -66,6 +69,7 @@ public class ParameterDescription {
     init(object, parameterized, bundle, jc);
   }
 
+  @Impure
   public ParameterDescription(Object object, Parameter annotation, Parameterized parameterized,
       ResourceBundle bundle, JCommander jc) {
     m_parameterAnnotation = annotation;
@@ -77,6 +81,7 @@ public class ParameterDescription {
    * Find the resource bundle in the annotations.
    * @return
    */
+  @Impure
   @SuppressWarnings("deprecation")
   private ResourceBundle findResourceBundle(Object o) {
     ResourceBundle result = null;
@@ -95,10 +100,12 @@ public class ParameterDescription {
     return result;
   }
 
+  @Pure
   private boolean isEmpty(String s) {
     return s == null || "".equals(s);
   }
 
+  @Impure
   private void initDescription(String description, String descriptionKey, String[] names) {
     m_description = description;
     if (! "".equals(descriptionKey)) {
@@ -116,6 +123,7 @@ public class ParameterDescription {
     }
   }
 
+  @Impure
   @SuppressWarnings("unchecked")
   private void init(Object object, Parameterized parameterized, ResourceBundle bundle,
       JCommander jCommander) {
@@ -160,27 +168,33 @@ public class ParameterDescription {
     }
   }
 
+  @Impure
   private void validateDefaultValues(String[] names) {
     String name = names.length > 0 ? names[0] : "";
     validateValueParameter(name, m_default);
   }
 
+  @Pure
   public String getLongestName() {
     return m_longestName;
   }
 
+  @Pure
   public Object getDefault() {
    return m_default;
   }
 
+  @Pure
   public String getDescription() {
     return m_description;
   }
 
+  @Pure
   public Object getObject() {
     return m_object;
   }
 
+  @Impure
   public String getNames() {
     StringBuilder sb = new StringBuilder();
     String[] names = m_wrappedParameter.names();
@@ -192,20 +206,24 @@ public class ParameterDescription {
     return sb.toString();
   }
 
+  @Pure
   public WrappedParameter getParameter() {
     return m_wrappedParameter;
   }
 
+  @Pure
   public Parameterized getParameterized() {
     return m_parameterized;
   }
 
+  @Impure
   private boolean isMultiOption() {
     Class<?> fieldType = m_parameterized.getType();
     return fieldType.equals(List.class) || fieldType.equals(Set.class)
         || m_parameterized.isDynamicParameter();
   }
 
+  @Impure
   public void addValue(String value) {
     addValue(value, false /* not default */);
   }
@@ -213,11 +231,13 @@ public class ParameterDescription {
   /**
    * @return true if this parameter received a value during the parsing phase.
    */
+  @Pure
   public boolean isAssigned() {
     return m_assigned;
   }
 
 
+  @Impure
   public void setAssigned(boolean b) {
     m_assigned = b;
   }
@@ -227,6 +247,7 @@ public class ParameterDescription {
    * validator was specified. Then look up any field converter, then any type
    * converter, and if we can't find any, throw an exception.
    */
+  @Impure
   public void addValue(String value, boolean isDefault) {
     p("Adding " + (isDefault ? "default " : "") + "value:" + value
         + " to parameter:" + m_parameterized.getName());
@@ -263,6 +284,7 @@ public class ParameterDescription {
     if (! isDefault) m_assigned = true;
   }
 
+  @Impure
   private void validateParameter(String name, String value) {
     Class<? extends IParameterValidator> validator = m_wrappedParameter.validateWith();
     if (validator != null) {
@@ -270,6 +292,7 @@ public class ParameterDescription {
     }
   }
 
+  @Impure
   private void validateValueParameter(String name, Object value) {
     Class<? extends IValueValidator> validator = m_wrappedParameter.validateValueWith();
     if (validator != null) {
@@ -277,6 +300,7 @@ public class ParameterDescription {
     }
   }
 
+  @Impure
   public static void validateValueParameter(Class<? extends IValueValidator> validator,
       String name, Object value) {
     try {
@@ -291,6 +315,7 @@ public class ParameterDescription {
     }
   }
 
+  @Impure
   public static void validateParameter(ParameterDescription pd,
       Class<? extends IParameterValidator> validator,
       String name, String value) {
@@ -320,6 +345,7 @@ public class ParameterDescription {
    * Currently only List and Set are supported. Support for
    * Queues and Stacks could be useful.
    */
+  @Impure
   @SuppressWarnings("unchecked")
   private Collection<Object> newCollection(Class<?> type) {
     if (SortedSet.class.isAssignableFrom(type)) return new TreeSet();
@@ -336,25 +362,31 @@ public class ParameterDescription {
    * Tests if its the first time a non-default value is
    * being added to the field.
    */
+  @Pure
   private boolean fieldIsSetForTheFirstTime(boolean isDefault) {
     return (!isDefault && !m_assigned);
   }
 
+  @Impure
   private static void p(String string) {
     if (System.getProperty(JCommander.DEBUG_PROPERTY) != null) {
       JCommander.getConsole().println("[ParameterDescription] " + string);
     }
   }
 
+  @Impure
   @Override
   public String toString() {
     return "[ParameterDescription " + m_parameterized.getName() + "]";
   }
 
+  @Pure
   public boolean isDynamicParameter() {
     return m_dynamicParameterAnnotation != null;
   }
 
+  @Pure
+  @Impure
   public boolean isHelp() {
     return m_wrappedParameter.isHelp();
   }

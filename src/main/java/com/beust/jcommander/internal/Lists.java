@@ -18,6 +18,8 @@
 
 package com.beust.jcommander.internal;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,26 +28,32 @@ import java.util.List;
 
 public class Lists {
 
+    @SideEffectFree
     public static <K> List<K> newArrayList() {
         return new ArrayList<K>();
     }
 
+    @SideEffectFree
     public static <K> List<K> newArrayList(Collection<K> c) {
         return new ArrayList<K>(c);
     }
 
+    @SideEffectFree
     public static <K> List<K> newArrayList(K... c) {
       return new ArrayList<K>(Arrays.asList(c));
     }
 
+    @SideEffectFree
     public static <K> List<K> newArrayList(int size) {
         return new ArrayList<K>(size);
     }
 
+    @Impure
     public static <K> LinkedList<K> newLinkedList() {
         return new LinkedList<K>();
     }
 
+    @Impure
     public static <K> LinkedList<K> newLinkedList(Collection<K> c) {
         return new LinkedList<K>(c);
     }

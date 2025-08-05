@@ -18,6 +18,7 @@
 
 package com.beust.jcommander.converters;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import com.beust.jcommander.IStringConverter;
 
 import java.io.File;
@@ -29,6 +30,7 @@ import java.io.File;
  */
 public class FileConverter implements IStringConverter<File> {
 
+  @SideEffectFree
   public File convert(String value) {
     return new File(value);
   }

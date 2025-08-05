@@ -18,6 +18,8 @@
 
 package com.beust.jcommander.converters;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import com.beust.jcommander.ParameterException;
 
 /**
@@ -27,10 +29,14 @@ import com.beust.jcommander.ParameterException;
  */
 public class IntegerConverter extends BaseConverter<Integer> {
 
+  @SideEffectFree
+  @Impure
   public IntegerConverter(String optionName) {
     super(optionName);
   }
 
+  @SideEffectFree
+  @Impure
   public Integer convert(String value) {
     try {
       return Integer.parseInt(value);

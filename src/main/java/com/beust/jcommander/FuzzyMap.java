@@ -1,5 +1,7 @@
 package com.beust.jcommander;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import com.beust.jcommander.internal.Maps;
 
 import java.util.Map;
@@ -10,9 +12,11 @@ import java.util.Map;
  */
 public class FuzzyMap {
   interface IKey {
+    @Pure
     String getName();
   }
 
+  @Impure
   public static <V> V findInMap(Map<? extends IKey, V> map, IKey name,
       boolean caseSensitive, boolean allowAbbreviations) {
     if (allowAbbreviations) {
@@ -31,6 +35,7 @@ public class FuzzyMap {
     return null;
   }
 
+  @Impure
   private static <V> V findAbbreviatedValue(Map<? extends IKey, V> map, IKey name,
       boolean caseSensitive) {
     String string = name.getName();

@@ -17,6 +17,8 @@
  */
 
 package com.beust.jcommander;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 
 /**
  * Thrown when a command was expected.
@@ -26,10 +28,14 @@ package com.beust.jcommander;
 @SuppressWarnings("serial")
 public class MissingCommandException extends ParameterException {
 
+  @SideEffectFree
+  @Impure
   public MissingCommandException(String string) {
     super(string);
   }
 
+  @SideEffectFree
+  @Impure
   public MissingCommandException(Throwable t) {
     super(t);
   }

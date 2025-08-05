@@ -18,6 +18,7 @@
 
 package com.beust.jcommander.converters;
 
+import org.checkerframework.dataflow.qual.Pure;
 import com.beust.jcommander.IStringConverter;
 
 /**
@@ -27,6 +28,7 @@ import com.beust.jcommander.IStringConverter;
  */
 public class StringConverter implements IStringConverter<String> {
 
+  @Pure
   public String convert(String value) {
     return value;
   }

@@ -17,6 +17,7 @@
  */
 
 package com.beust.jcommander;
+import org.checkerframework.dataflow.qual.Impure;
 
 /**
  * An interface that converts strings to any arbitrary type.
@@ -35,5 +36,6 @@ public interface IStringConverter<T> {
   /**
    * @return an object of type <T> created from the parameter value.
    */
+  @Impure
   T convert(String value);
 }

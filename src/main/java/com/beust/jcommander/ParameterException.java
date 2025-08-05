@@ -17,6 +17,7 @@
  */
 
 package com.beust.jcommander;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * The main exception that JCommand will throw when something goes wrong while
@@ -27,10 +28,12 @@ package com.beust.jcommander;
 @SuppressWarnings("serial")
 public class ParameterException extends RuntimeException {
 
+  @SideEffectFree
   public ParameterException(Throwable t) {
     super(t);
   }
 
+  @SideEffectFree
   public ParameterException(String string) {
     super(string);
   }

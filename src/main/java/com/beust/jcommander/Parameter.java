@@ -18,6 +18,7 @@
 
 package com.beust.jcommander;
 
+import org.checkerframework.dataflow.qual.Pure;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 
@@ -39,33 +40,39 @@ public @interface Parameter {
    * If this attribute is omitted, the field it's annotating will receive all the
    * unparsed options. There can only be at most one such annotation.
    */
+  @Pure
   String[] names() default {};
 
   /**
    * A description of this option.
    */
+  @Pure
   String description() default "";
 
   /**
    * Whether this option is required.
    */
+  @Pure
   boolean required() default false;
 
   /**
    * The key used to find the string in the message bundle.
    */
+  @Pure
   String descriptionKey() default "";
 
   /**
    * How many parameter values this parameter will consume. For example,
    * an arity of 2 will allow "-pair value1 value2".
    */
+  @Pure
   int arity() default -1;
 
   /**
    * If true, this parameter is a password and it will be prompted on the console
    * (if available).
    */
+  @Pure
   boolean password() default false;
 
   /**
@@ -73,6 +80,7 @@ public @interface Parameter {
    * and not <tt>listConverter</tt> attribute was specified, JCommander will split
    * the input in individual values and convert each of them separately.
    */
+  @Pure
   Class<? extends IStringConverter<?>> converter() default NoConverter.class;
 
   /**
@@ -80,43 +88,51 @@ public @interface Parameter {
    * field has to be of type <tt>List</tt> and the converter needs to return
    * a List that's compatible with that type.
    */
+  @Pure
   Class<? extends IStringConverter<?>> listConverter() default NoConverter.class;
 
   /**
    * If true, this parameter won't appear in the usage().
    */
+  @Pure
   boolean hidden() default false;
 
   /**
    * Validate the parameter found on the command line.
    */
+  @Pure
   Class<? extends IParameterValidator> validateWith() default NoValidator.class;
 
   /**
    * Validate the value for this parameter.
    */
+  @Pure
   Class<? extends IValueValidator> validateValueWith() default NoValueValidator.class;
 
   /**
    * @return true if this parameter has a variable arity. See @{IVariableArity}
    */
+  @Pure
   boolean variableArity() default false;
 
   /**
    * What splitter to use (applicable only on fields of type <tt>List</tt>). By default,
    * a comma separated splitter will be used.
    */
+  @Pure
   Class<? extends IParameterSplitter> splitter() default CommaParameterSplitter.class;
   
   /**
    * If true, console will not echo typed input
    * Used in conjunction with password = true
    */
+  @Pure
   boolean echoInput() default false;
 
   /**
    * If true, this parameter is for help. If such a parameter is specified,
    * required parameters are no longer checked for their presence.
    */
+  @Pure
   boolean help() default false;
 }

@@ -18,16 +18,19 @@
 
 package com.beust.jcommander.internal;
 
+import org.checkerframework.dataflow.qual.Impure;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class Sets {
 
+  @Impure
   public static <K> Set<K> newHashSet() {
     return new HashSet<K>();
   }
 
+  @Impure
   public static <K> Set<K> newLinkedHashSet() {
     return new LinkedHashSet<K>();
   }

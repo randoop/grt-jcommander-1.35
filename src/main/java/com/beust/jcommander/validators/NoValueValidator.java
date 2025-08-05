@@ -18,6 +18,7 @@
 
 package com.beust.jcommander.validators;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import com.beust.jcommander.IValueValidator;
 import com.beust.jcommander.ParameterException;
 
@@ -28,6 +29,7 @@ import com.beust.jcommander.ParameterException;
  */
 public class NoValueValidator<T> implements IValueValidator<T> {
 
+  @SideEffectFree
   public void validate(String parameterName, T parameterValue)
       throws ParameterException {
   }

@@ -1,5 +1,6 @@
 package com.beust.jcommander.internal;
 
+import org.checkerframework.dataflow.qual.Impure;
 import com.beust.jcommander.ParameterException;
 
 import java.io.BufferedReader;
@@ -8,14 +9,17 @@ import java.io.InputStreamReader;
 
 public class DefaultConsole implements Console {
 
+  @Impure
   public void print(String msg) {
     System.out.print(msg);
   }
 
+  @Impure
   public void println(String msg) {
     System.out.println(msg);
   }
 
+  @Impure
   public char[] readPassword(boolean echoInput) {
     try {
       InputStreamReader isr = new InputStreamReader(System.in);

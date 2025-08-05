@@ -18,6 +18,7 @@
 
 package com.beust.jcommander.internal;
 
+import org.checkerframework.dataflow.qual.Pure;
 import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.IStringConverterFactory;
 import com.beust.jcommander.converters.BigDecimalConverter;
@@ -59,6 +60,7 @@ public class DefaultConverterFactory implements IStringConverterFactory {
     m_classConverters.put(Date.class, ISO8601DateConverter.class);
   }
 
+  @Pure
   public Class<? extends IStringConverter<?>> getConverter(Class forType) {
     return m_classConverters.get(forType);
   }

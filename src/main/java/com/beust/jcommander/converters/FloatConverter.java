@@ -18,6 +18,8 @@
 
 package com.beust.jcommander.converters;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import com.beust.jcommander.ParameterException;
 
 /**
@@ -27,10 +29,14 @@ import com.beust.jcommander.ParameterException;
  */
 public class FloatConverter extends BaseConverter<Float> {
 
+  @SideEffectFree
+  @Impure
   public FloatConverter(String optionName) {
     super(optionName);
   }
 
+  @SideEffectFree
+  @Impure
   public Float convert(String value) {
     try {
       return Float.parseFloat(value);

@@ -1,4 +1,5 @@
 package com.beust.jcommander;
+import org.checkerframework.dataflow.qual.Impure;
 
 /**
  * Must be implemented by argument classes that contain at least one
@@ -12,5 +13,6 @@ public interface IVariableArity {
    *
    * @return how many options were processed.
    */
+  @Impure
   int processVariableArity(String optionName, String[] options);
 }

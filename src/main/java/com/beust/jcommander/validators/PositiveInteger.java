@@ -18,6 +18,8 @@
 
 package com.beust.jcommander.validators;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;
 
@@ -28,6 +30,8 @@ import com.beust.jcommander.ParameterException;
  */
 public class PositiveInteger implements IParameterValidator {
 
+  @SideEffectFree
+  @Impure
   public void validate(String name, String value)
       throws ParameterException {
     int n = Integer.parseInt(value);

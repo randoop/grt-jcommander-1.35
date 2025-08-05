@@ -17,6 +17,7 @@
  */
 
 package com.beust.jcommander;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 public interface IParameterValidator2 extends IParameterValidator {
 
@@ -29,6 +30,7 @@ public interface IParameterValidator2 extends IParameterValidator {
    *
    * @throws ParameterException Thrown if the value of the parameter is invalid.
    */
+  @SideEffectFree
   void validate(String name, String value, ParameterDescription pd) throws ParameterException;
 
 }

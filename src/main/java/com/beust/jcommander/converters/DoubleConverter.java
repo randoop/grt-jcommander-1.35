@@ -18,6 +18,8 @@
 
 package com.beust.jcommander.converters;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import com.beust.jcommander.ParameterException;
 
 /**
@@ -27,10 +29,14 @@ import com.beust.jcommander.ParameterException;
  */
 public class DoubleConverter extends BaseConverter<Double> {
 
+  @SideEffectFree
+  @Impure
   public DoubleConverter(String optionName) {
     super(optionName);
   }
 
+  @SideEffectFree
+  @Impure
   public Double convert(String value) {
     try {
       return Double.parseDouble(value);

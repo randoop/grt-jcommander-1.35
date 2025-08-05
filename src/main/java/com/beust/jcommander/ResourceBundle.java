@@ -18,6 +18,7 @@
 
 package com.beust.jcommander;
 
+import org.checkerframework.dataflow.qual.Pure;
 import static java.lang.annotation.ElementType.TYPE;
 
 import java.lang.annotation.Retention;
@@ -34,5 +35,6 @@ public @interface ResourceBundle {
   /**
    * The name of the resource bundle to use for this class.
    */
+  @Pure
   String value();
 }

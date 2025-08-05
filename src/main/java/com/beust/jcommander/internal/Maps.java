@@ -18,20 +18,24 @@
 
 package com.beust.jcommander.internal;
 
+import org.checkerframework.dataflow.qual.Impure;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Maps {
 
+  @Impure
   public static <K, V> Map<K,V> newHashMap() {
     return new HashMap<K, V>();
   }
 
+  @Impure
   public static <K, V> Map<K,V> newLinkedHashMap() {
     return new LinkedHashMap<K, V>();
   }
 
+  @Impure
   public static <T> Map<T, T> newHashMap(T... parameters) {
     Map<T, T> result = Maps.newHashMap();
     for (int i = 0; i < parameters.length; i += 2) {

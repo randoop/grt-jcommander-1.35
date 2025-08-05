@@ -1,5 +1,6 @@
 package com.beust.jcommander.converters;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.List;
 
 /**
@@ -7,5 +8,6 @@ import java.util.List;
  * list of arguments ([a,b,c] and [d,e,f]).
  */
 public interface IParameterSplitter {
+  @SideEffectFree
   List<String> split(String value);
 }

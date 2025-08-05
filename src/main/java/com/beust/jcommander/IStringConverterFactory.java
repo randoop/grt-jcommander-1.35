@@ -17,6 +17,7 @@
  */
 
 package com.beust.jcommander;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * A factory for IStringConverter. This interface lets you specify your
@@ -26,5 +27,6 @@ package com.beust.jcommander;
  * @author cbeust
  */
 public interface IStringConverterFactory {
+  @Pure
   <T> Class<? extends IStringConverter<T>> getConverter(Class<T> forType);
 }

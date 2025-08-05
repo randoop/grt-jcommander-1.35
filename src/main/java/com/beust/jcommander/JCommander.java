@@ -18,6 +18,9 @@
 
 package com.beust.jcommander;
 
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -142,6 +145,8 @@ public class JCommander {
 
   private Comparator<? super ParameterDescription> m_parameterDescriptionComparator
       = new Comparator<ParameterDescription>() {
+        @Pure
+        @Impure
         @Override
         public int compare(ParameterDescription p0, ParameterDescription p1) {
           return p0.getLongestName().compareTo(p1.getLongestName());
@@ -175,6 +180,7 @@ public class JCommander {
   /**
    * @param object The arg object expected to contain {@link Parameter} annotations.
    */
+  @Impure
   public JCommander(Object object) {
     addObject(object);
     createDescriptions();
@@ -184,6 +190,7 @@ public class JCommander {
    * @param object The arg object expected to contain {@link Parameter} annotations.
    * @param bundle The bundle to use for the descriptions. Can be null.
    */
+  @Impure
   public JCommander(Object object, @Nullable ResourceBundle bundle) {
     addObject(object);
     setDescriptionsBundle(bundle);
@@ -194,6 +201,7 @@ public class JCommander {
    * @param bundle The bundle to use for the descriptions. Can be null.
    * @param args The arguments to parse (optional).
    */
+  @Impure
   public JCommander(Object object, ResourceBundle bundle, String... args) {
     addObject(object);
     setDescriptionsBundle(bundle);
@@ -204,11 +212,13 @@ public class JCommander {
    * @param object The arg object expected to contain {@link Parameter} annotations.
    * @param args The arguments to parse (optional).
    */
+  @Impure
   public JCommander(Object object, String... args) {
     addObject(object);
     parse(args);
   }
   
+  @Impure
   public static Console getConsole() {
     if (m_console == null) {
       try {
@@ -231,6 +241,7 @@ public class JCommander {
    * the child objects will be added instead.
    */
   // declared final since this is invoked from constructors
+  @Impure
   public final void addObject(Object object) {
     if (object instanceof Iterable) {
       // Iterable
@@ -253,6 +264,7 @@ public class JCommander {
    * Set this to <code>null</code> to use description text directly.
    */
   // declared final since this is invoked from constructors
+  @Impure
   public final void setDescriptionsBundle(ResourceBundle bundle) {
     m_bundle = bundle;
   }
@@ -260,6 +272,7 @@ public class JCommander {
   /**
    * Parse and validate the command line parameters.
    */
+  @Impure
   public void parse(String... args) {
     parse(true /* validate */, args);
   }
@@ -267,10 +280,12 @@ public class JCommander {
   /**
    * Parse the command line parameters without validating them.
    */
+  @Impure
   public void parseWithoutValidation(String... args) {
     parse(false /* no validation */, args);
   }
 
+  @Impure
   private void parse(boolean validate, String... args) {
     StringBuilder sb = new StringBuilder("Parsing \"");
     sb.append(join(args).append("\"\n  with:").append(join(m_objects.toArray())));
@@ -282,6 +297,7 @@ public class JCommander {
     if (validate) validateOptions();
   }
 
+  @Impure
   private StringBuilder join(Object[] args) {
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < args.length; i++) {
@@ -291,6 +307,7 @@ public class JCommander {
     return result;
   }
 
+  @Impure
   private void initializeDefaultValues() {
     if (m_defaultProvider != null) {
       for (ParameterDescription pd : m_descriptions.values()) {
@@ -306,6 +323,7 @@ public class JCommander {
   /**
    * Make sure that all the required parameters have received a value.
    */
+  @Impure
   private void validateOptions() {
     // No validation if we found a help parameter
     if (m_helpWasSpecified) {
@@ -331,6 +349,7 @@ public class JCommander {
     }
   }
 
+  @Pure
   private static String pluralize(int quantity, String singular, String plural) {
     return quantity == 1 ? singular : plural;
   }
@@ -343,6 +362,7 @@ public class JCommander {
    * @param originalArgv the original command line parameters
    * @return the new and enriched command line parameters
    */
+  @Impure
   private String[] expandArgs(String[] originalArgv) {
     List<String> vResult1 = Lists.newArrayList();
 
@@ -385,6 +405,8 @@ public class JCommander {
     return vResult2.toArray(new String[vResult2.size()]);
   }
 
+  @SideEffectFree
+  @Impure
   private List<String> expandDynamicArg(String arg) {
     for (ParameterDescription pd : m_descriptions.values()) {
       if (pd.isDynamicParameter()) {
@@ -399,11 +421,14 @@ public class JCommander {
     return Arrays.asList(arg);
   }
 
+  @Impure
   private boolean isOption(String[] args, String arg) {
     String prefixes = getOptionPrefixes(args, arg);
     return arg.length() > 0 && prefixes.indexOf(arg.charAt(0)) >= 0;
   }
 
+  @SideEffectFree
+  @Impure
   private ParameterDescription getPrefixDescriptionFor(String arg) {
     for (Map.Entry<IKey, ParameterDescription> es : m_descriptions.entrySet()) {
       if (arg.startsWith(es.getKey().getName())) return es.getValue();
@@ -416,6 +441,8 @@ public class JCommander {
    * If arg is an option, we can look it up directly, but if it's a value,
    * we need to find the description for the option that precedes it.
    */
+  @SideEffectFree
+  @Impure
   private ParameterDescription getDescriptionFor(String[] args, String arg) {
     ParameterDescription result = getPrefixDescriptionFor(arg);
     if (result != null) return result;
@@ -429,6 +456,7 @@ public class JCommander {
     throw new ParameterException("Unknown parameter: " + arg);
   }
 
+  @Impure
   private String getSeparatorFor(String[] args, String arg) {
     ParameterDescription pd = getDescriptionFor(args, arg);
 
@@ -441,6 +469,7 @@ public class JCommander {
     return " ";
   }
 
+  @Impure
   private String getOptionPrefixes(String[] args, String arg) {
     ParameterDescription pd = getDescriptionFor(args, arg);
 
@@ -475,6 +504,7 @@ public class JCommander {
    * @param fileName the command line filename
    * @return the file content as a string.
    */
+  @Impure
   private static List<String> readFile(String fileName) {
     List<String> result = Lists.newArrayList();
 
@@ -501,6 +531,7 @@ public class JCommander {
   /**
    * Remove spaces at both ends and handle double quotes.
    */
+  @SideEffectFree
   private static String trim(String string) {
     String result = string.trim();
     if (result.startsWith("\"") && result.endsWith("\"") && result.length() > 1) {
@@ -512,6 +543,7 @@ public class JCommander {
   /**
    * Create the ParameterDescriptions for all the \@Parameter found.
    */
+  @Impure
   private void createDescriptions() {
     m_descriptions = Maps.newHashMap();
 
@@ -520,6 +552,7 @@ public class JCommander {
     }
   }
 
+  @Impure
   private void addDescription(Object object) {
     Class<?> cls = object.getClass();
 
@@ -657,6 +690,7 @@ public class JCommander {
 //    }
   }
 
+  @Impure
   private void initializeDefaultValue(ParameterDescription pd) {
     for (String optionName : pd.getParameter().names()) {
       String def = m_defaultProvider.getDefaultValueFor(optionName);
@@ -671,6 +705,7 @@ public class JCommander {
   /**
    * Main method that parses the values and initializes the fields accordingly.
    */
+  @Impure
   private void parseValues(String[] args, boolean validate) {
     // This boolean becomes true if we encounter a command, which indicates we need
     // to stop parsing (the parsing of the command will be done in a sub JCommander
@@ -800,6 +835,7 @@ public class JCommander {
 
   private class DefaultVariableArity implements IVariableArity {
 
+    @Impure
     @Override
     public int processVariableArity(String optionName, String[] options) {
         int i = 0;
@@ -819,6 +855,7 @@ public class JCommander {
   /**
    * @return the number of options that were processed.
    */
+  @Impure
   private int processVariableArity(String[] args, int index, ParameterDescription pd) {
     Object arg = pd.getObject();
     IVariableArity va;
@@ -839,6 +876,7 @@ public class JCommander {
     return result;
   }
 
+  @Impure
   private int processFixedArity(String[] args, int index, ParameterDescription pd,
       Class<?> fieldType) {
     // Regular parameter, use the arity to tell use how many values
@@ -849,6 +887,7 @@ public class JCommander {
     return processFixedArity(args, index, pd, fieldType, n);
   }
 
+  @Impure
   private int processFixedArity(String[] args, int originalIndex, ParameterDescription pd,
                                 Class<?> fieldType, int arity) {
     int index = originalIndex;
@@ -882,11 +921,13 @@ public class JCommander {
    * Invoke Console.readPassword through reflection to avoid depending
    * on Java 6.
    */
+  @Impure
   private char[] readPassword(String description, boolean echoInput) {
     getConsole().print(description + ": ");
     return getConsole().readPassword(echoInput);
   }
 
+  @SideEffectFree
   private String[] subArray(String[] args, int index) {
     int l = args.length - index;
     String[] result = new String[l];
@@ -901,6 +942,7 @@ public class JCommander {
    * @param arg the arg that we're about to add (only passed here to output a meaningful
    * error message).
    */
+  @Impure
   private List<?> getMainParameter(String arg) {
     if (m_mainParameter == null) {
       throw new ParameterException(
@@ -923,6 +965,7 @@ public class JCommander {
     return result;
   }
 
+  @Impure
   public String getMainParameterDescription() {
     if (m_descriptions == null) createDescriptions();
     return m_mainParameterAnnotation != null ? m_mainParameterAnnotation.description()
@@ -942,6 +985,7 @@ public class JCommander {
   /**
    * Set the program name (used only in the usage).
    */
+  @Impure
   public void setProgramName(String name) {
     setProgramName(name, new String[0]);
   }
@@ -952,6 +996,7 @@ public class JCommander {
    * @param name    program name
    * @param aliases aliases to the program name
    */
+  @Impure
   public void setProgramName(String name, String... aliases) {
     m_programName = new ProgramName(name, Arrays.asList(aliases));
   }
@@ -959,6 +1004,7 @@ public class JCommander {
   /**
    * Display the usage for this command.
    */
+  @Impure
   public void usage(String commandName) {
     StringBuilder sb = new StringBuilder();
     usage(commandName, sb);
@@ -968,6 +1014,7 @@ public class JCommander {
   /**
    * Store the help for the command in the passed string builder.
    */
+  @Impure
   public void usage(String commandName, StringBuilder out) {
     usage(commandName, out, "");
   }
@@ -976,6 +1023,7 @@ public class JCommander {
    * Store the help for the command in the passed string builder, indenting
    * every line with "indent".
    */
+  @Impure
   public void usage(String commandName, StringBuilder out, String indent) {
     String description = getCommandDescription(commandName);
     JCommander jc = findCommandByAlias(commandName);
@@ -989,6 +1037,7 @@ public class JCommander {
   /**
    * @return the description of the command.
    */
+  @Impure
   public String getCommandDescription(String commandName) {
     JCommander jc = findCommandByAlias(commandName);
     if (jc == null) {
@@ -1020,6 +1069,7 @@ public class JCommander {
    * @return The internationalized version of the string if available, otherwise
    * return def.
    */
+  @Impure
   private String getI18nString(ResourceBundle bundle, String key, String def) {
     String s = bundle != null ? bundle.getString(key) : null;
     return s != null ? s : def;
@@ -1028,6 +1078,7 @@ public class JCommander {
   /**
    * Display the help on System.out.
    */
+  @Impure
   public void usage() {
     StringBuilder sb = new StringBuilder();
     usage(sb);
@@ -1037,10 +1088,12 @@ public class JCommander {
   /**
    * Store the help in the passed string builder.
    */
+  @Impure
   public void usage(StringBuilder out) {
     usage(out, "");
   }
 
+  @Impure
   public void usage(StringBuilder out, String indent) {
     if (m_descriptions == null) createDescriptions();
     boolean hasCommands = !m_commands.isEmpty();
@@ -1127,22 +1180,27 @@ public class JCommander {
     }
   }
 
+  @Pure
   private Comparator<? super ParameterDescription> getParameterDescriptionComparator() {
     return m_parameterDescriptionComparator;
   }
 
+  @Impure
   public void setParameterDescriptionComparator(Comparator<? super ParameterDescription> c) {
     m_parameterDescriptionComparator = c;
   }
 
+  @Impure
   public void setColumnSize(int columnSize) {
     m_columnSize = columnSize;
   }
 
+  @Pure
   public int getColumnSize() {
     return m_columnSize;
   }
 
+  @Impure
   private void wrapDescription(StringBuilder out, int indent, String description) {
     int max = getColumnSize();
     String[] words = description.split(" ");
@@ -1166,6 +1224,7 @@ public class JCommander {
    * target class. This can be used to display the usage() in a different
    * format (e.g. HTML).
    */
+  @SideEffectFree
   public List<ParameterDescription> getParameters() {
     return new ArrayList<ParameterDescription>(m_fields.values());
   }
@@ -1173,10 +1232,12 @@ public class JCommander {
   /**
    * @return the main parameter description or null if none is defined.
    */
+  @Pure
   public ParameterDescription getMainParameter() {
     return m_mainParameterDescription;
   }
 
+  @Impure
   private void p(String string) {
     if (m_verbose > 0 || System.getProperty(JCommander.DEBUG_PROPERTY) != null) {
       getConsole().println("[JCommander] " + string);
@@ -1186,6 +1247,7 @@ public class JCommander {
   /**
    * Define the default provider for this instance.
    */
+  @Impure
   public void setDefaultProvider(IDefaultProvider defaultProvider) {
     m_defaultProvider = defaultProvider;
 
@@ -1194,10 +1256,13 @@ public class JCommander {
     }
   }
 
+  @Impure
   public void addConverterFactory(IStringConverterFactory converterFactory) {
     CONVERTER_FACTORIES.addFirst(converterFactory);
   }
 
+  @Pure
+  @Impure
   public <T> Class<? extends IStringConverter<T>> findConverter(Class<T> cls) {
     for (IStringConverterFactory f : CONVERTER_FACTORIES) {
       Class<? extends IStringConverter<T>> result = f.getConverter(cls);
@@ -1207,6 +1272,7 @@ public class JCommander {
     return null;
   }
 
+  @Impure
   public Object convertValue(ParameterDescription pd, String value) {
     return convertValue(pd.getParameterized(), pd.getParameterized().getType(), value);
   }
@@ -1215,6 +1281,7 @@ public class JCommander {
    * @param type The type of the actual parameter
    * @param value The value to convert
    */
+  @Impure
   public Object convertValue(Parameterized parameterized, Class type,
       String value) {
     Parameter annotation = parameterized.getParameter();
@@ -1299,6 +1366,7 @@ public class JCommander {
    * Use the splitter to split the value into multiple values and then convert
    * each of them individually.
    */
+  @Impure
   private Object convertToList(String value, IStringConverter<?> converter,
       Class<? extends IParameterSplitter> splitterClass)
           throws InstantiationException, IllegalAccessException {
@@ -1310,6 +1378,7 @@ public class JCommander {
     return result;
   }
 
+  @Impure
   private IStringConverter<?> instantiateConverter(String optionName,
       Class<? extends IStringConverter<?>> converterClass)
       throws IllegalArgumentException, InstantiationException, IllegalAccessException,
@@ -1339,10 +1408,12 @@ public class JCommander {
   /**
    * Add a command object.
    */
+  @Impure
   public void addCommand(String name, Object object) {
     addCommand(name, object, new String[0]);
   }
 
+  @Impure
   public void addCommand(Object object) {
     Parameters p = object.getClass().getAnnotation(Parameters.class);
     if (p != null && p.commandNames().length > 0) {
@@ -1358,6 +1429,7 @@ public class JCommander {
   /**
    * Add a command object and its aliases.
    */
+  @Impure
   public void addCommand(String name, Object object, String... aliases) {
     JCommander jc = new JCommander(object);
     jc.setProgramName(name, aliases);
@@ -1389,6 +1461,7 @@ public class JCommander {
     }
   }
 
+  @Impure
   public Map<String, JCommander> getCommands() {
     Map<String, JCommander> res = Maps.newLinkedHashMap();
     for (Map.Entry<ProgramName, JCommander> entry : m_commands.entrySet()) {
@@ -1397,6 +1470,7 @@ public class JCommander {
     return res;
   }
 
+  @Pure
   public String getParsedCommand() {
     return m_parsedCommand;
   }
@@ -1408,6 +1482,7 @@ public class JCommander {
    *
    * @return Name of command or alias passed to command line. If none passed: <code>null</code>.
    */
+  @Pure
   public String getParsedAlias() {
     return m_parsedAlias;
   }
@@ -1415,6 +1490,7 @@ public class JCommander {
   /**
    * @return n spaces
    */
+  @Impure
   private String s(int count) {
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < count; i++) {
@@ -1428,15 +1504,18 @@ public class JCommander {
    * @return the objects that JCommander will fill with the result of
    * parsing the command line.
    */
+  @Pure
   public List<Object> getObjects() {
     return m_objects;
   }
 
+  @Impure
   private ParameterDescription findParameterDescription(String arg) {
     return FuzzyMap.findInMap(m_descriptions, new StringKey(arg), m_caseSensitiveOptions,
         m_allowAbbreviatedOptions);
   }
 
+  @Impure
   private JCommander findCommand(ProgramName name) {
     return FuzzyMap.findInMap(m_commands, name,
         m_caseSensitiveOptions, m_allowAbbreviatedOptions);
@@ -1452,6 +1531,7 @@ public class JCommander {
 //    return null;
   }
 
+  @Impure
   private ProgramName findProgramName(String name) {
     return FuzzyMap.findInMap(aliasMap, new StringKey(name),
         m_caseSensitiveOptions, m_allowAbbreviatedOptions);
@@ -1460,6 +1540,7 @@ public class JCommander {
   /*
   * Reverse lookup JCommand object by command's name or its alias
   */
+  @Impure
   private JCommander findCommandByAlias(String commandOrAlias) {
     ProgramName progName = findProgramName(commandOrAlias);
     if (progName == null) {
@@ -1481,16 +1562,19 @@ public class JCommander {
     private final String m_name;
     private final List<String> m_aliases;
 
+    @SideEffectFree
     ProgramName(String name, List<String> aliases) {
       m_name = name;
       m_aliases = aliases;
     }
 
+    @Pure
     @Override
     public String getName() {
       return m_name;
     }
 
+    @Impure
     private String getDisplayName() {
       StringBuilder sb = new StringBuilder();
       sb.append(m_name);
@@ -1508,6 +1592,7 @@ public class JCommander {
       return sb.toString();
     }
     
+    @Pure
     @Override
     public int hashCode() {
       final int prime = 31;
@@ -1516,6 +1601,7 @@ public class JCommander {
       return result;
     }
 
+    @Pure
     @Override
     public boolean equals(Object obj) {
       if (this == obj)
@@ -1537,6 +1623,7 @@ public class JCommander {
      * Important: ProgramName#toString() is used by longestName(Collection) function
      * to format usage output.
      */
+    @Impure
     @Override
     public String toString() {
       return getDisplayName();
@@ -1544,22 +1631,27 @@ public class JCommander {
     }
   }
 
+  @Impure
   public void setVerbose(int verbose) {
     m_verbose = verbose;
   }
 
+  @Impure
   public void setCaseSensitiveOptions(boolean b) {
     m_caseSensitiveOptions = b;
   }
 
+  @Impure
   public void setAllowAbbreviatedOptions(boolean b) {
     m_allowAbbreviatedOptions = b;
   }
 
+  @Impure
   public void setAcceptUnknownOptions(boolean b) {
     m_acceptUnknownOptions = b;
   }
 
+  @Pure
   public List<String> getUnknownOptions() {
     return m_unknownArgs;
   }

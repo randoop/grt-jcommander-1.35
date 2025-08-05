@@ -18,6 +18,9 @@
 
 package com.beust.jcommander.converters;
 
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import com.beust.jcommander.ParameterException;
 
 /**
@@ -27,10 +30,14 @@ import com.beust.jcommander.ParameterException;
  */
 public class BooleanConverter extends BaseConverter<Boolean> {
 
+  @SideEffectFree
+  @Impure
   public BooleanConverter(String optionName) {
     super(optionName);
   }
 
+  @Pure
+  @Impure
   public Boolean convert(String value) {
     if ("false".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value)) {
       return Boolean.parseBoolean(value);

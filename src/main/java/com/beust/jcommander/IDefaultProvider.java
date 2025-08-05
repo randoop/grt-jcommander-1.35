@@ -17,6 +17,7 @@
  */
 
 package com.beust.jcommander;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * Allows the specification of default values.
@@ -31,5 +32,6 @@ public interface IDefaultProvider {
    * 
    * @return the default value for this option.
    */
+  @SideEffectFree
   String getDefaultValueFor(String optionName);
 }

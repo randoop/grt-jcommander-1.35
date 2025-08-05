@@ -18,6 +18,8 @@
 
 package com.beust.jcommander.defaultprovider;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import com.beust.jcommander.IDefaultProvider;
 import com.beust.jcommander.ParameterException;
 
@@ -34,14 +36,17 @@ public class PropertyFileDefaultProvider implements IDefaultProvider {
   public static final String DEFAULT_FILE_NAME = "jcommander.properties";
   private Properties m_properties;
 
+  @Impure
   public PropertyFileDefaultProvider() {
     init(DEFAULT_FILE_NAME);
   }
 
+  @Impure
   public PropertyFileDefaultProvider(String fileName) {
     init(fileName);
   }
 
+  @Impure
   private void init(String fileName) {
     try {
       m_properties = new Properties();
@@ -58,6 +63,7 @@ public class PropertyFileDefaultProvider implements IDefaultProvider {
     }
   }
   
+  @SideEffectFree
   public String getDefaultValueFor(String optionName) {
     int index = 0;
     while (index < optionName.length() && ! Character.isLetterOrDigit(optionName.charAt(index))) {

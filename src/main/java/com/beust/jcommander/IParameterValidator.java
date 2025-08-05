@@ -17,6 +17,8 @@
  */
 
 package com.beust.jcommander;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 
 /**
  * The class used to validate parameters.
@@ -33,6 +35,8 @@ public interface IParameterValidator {
    *
    * @throws ParameterException Thrown if the value of the parameter is invalid.
    */
+  @SideEffectFree
+  @Impure
   void validate(String name, String value) throws ParameterException;
 
 }

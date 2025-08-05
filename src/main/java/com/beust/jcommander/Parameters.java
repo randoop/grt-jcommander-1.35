@@ -18,6 +18,7 @@
 
 package com.beust.jcommander;
 
+import org.checkerframework.dataflow.qual.Pure;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -39,16 +40,19 @@ public @interface Parameters {
   /**
    * The name of the resource bundle to use for this class.
    */
+  @Pure
   String resourceBundle() default "";
 
   /**
    * The character(s) that separate options.
    */
+  @Pure
   String separators() default " ";
 
   /**
    * What characters an option starts with.
    */
+  @Pure
   String optionPrefixes() default DEFAULT_OPTION_PREFIXES;
 
   /**
@@ -56,15 +60,18 @@ public @interface Parameters {
    * {@link JCommander#addCommand}, then this string will be displayed in the
    * description when @{link JCommander#usage} is invoked.
    */
+  @Pure
   String commandDescription() default "";
 
   /**
    * @return the key used to find the command description in the resource bundle.
    */
+  @Pure
   String commandDescriptionKey() default "";
 
   /**
    * An array of allowed command names.
    */
+  @Pure
   String[] commandNames() default {};
 }
